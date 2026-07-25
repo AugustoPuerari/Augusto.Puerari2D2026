@@ -13,13 +13,26 @@ html {
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    /* Fundo com tom suave e textura sutil de folhas */
     background-color: #f4f7f4;
-    background-image: url('fundo_folhas_caidas.png'); 
+    background-image: url('fundo_folhas_caidas.png');
     background-repeat: repeat;
     background-size: 280px;
     color: #2c3e35;
     line-height: 1.6;
+}
+
+/* Transição suave entre páginas (controlada pelo script.js) */
+body {
+    opacity: 0;
+    transition: opacity 0.32s ease;
+}
+
+body.page-loaded {
+    opacity: 1;
+}
+
+body.page-leaving {
+    opacity: 0;
 }
 
 /* ==========================================================================
@@ -30,12 +43,14 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem 10%;
+    gap: 1.5rem;
+    padding: 1.2rem 6%;
     border-bottom: 2px solid #e0e9e2;
     position: sticky;
     top: 0;
     z-index: 100;
     box-shadow: 0 2px 10px rgba(44, 62, 53, 0.03);
+    flex-wrap: wrap;
 }
 
 header .logo h1 {
@@ -43,17 +58,18 @@ header .logo h1 {
     font-weight: 700;
     color: #2d5a3f;
     letter-spacing: -0.5px;
-    /* Detalhe de ramo ao lado da logo */
     background-image: url('header_ramo.png');
     background-repeat: no-repeat;
     background-position: left center;
     background-size: 38px;
     padding-left: 48px;
+    white-space: nowrap;
 }
 
 nav ul {
     list-style: none;
     display: flex;
+    flex-wrap: wrap;
     gap: 2rem;
 }
 
@@ -61,11 +77,83 @@ nav ul li a {
     text-decoration: none;
     color: #4a5d52;
     font-weight: 600;
-    transition: color 0.3s ease;
+    padding-bottom: 4px;
+    border-bottom: 2px solid transparent;
+    transition: color 0.3s ease, border-color 0.3s ease;
 }
 
 nav ul li a:hover {
     color: #2d5a3f;
+}
+
+nav ul li a.active-link {
+    color: #2d5a3f;
+    border-bottom: 2px solid #2d5a3f;
+}
+
+/* ==========================================================================
+   BARRA DE PESQUISA — usada só dentro da página Pesquisa
+   ========================================================================== */
+.search-bar {
+    display: flex;
+    align-items: center;
+    max-width: 640px;
+    margin: 0 auto 1.6rem auto;
+    background-color: #eef4ef;
+    border-radius: 999px;
+    padding: 0.4rem 0.4rem 0.4rem 1.4rem;
+    gap: 0.6rem;
+    transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.search-bar:focus-within {
+    background-color: #ffffff;
+    box-shadow: 0 0 0 2px rgba(45, 90, 63, 0.25), 0 6px 18px rgba(45, 90, 63, 0.08);
+}
+
+.search-bar .search-icon {
+    color: #6c7e73;
+    flex-shrink: 0;
+}
+
+.search-bar:focus-within .search-icon {
+    color: #2d5a3f;
+}
+
+.search-bar input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    outline: none;
+    padding: 0.75rem 0;
+    font-size: 1.05rem;
+    color: #2c3e35;
+    font-family: inherit;
+    min-width: 0;
+}
+
+.search-bar input::placeholder {
+    color: #8fa199;
+}
+
+.search-bar button {
+    border: none;
+    background-color: #2d5a3f;
+    color: #ffffff;
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.25s ease, transform 0.2s ease;
+}
+
+.search-bar button:hover {
+    background-color: #234a32;
+    transform: scale(1.06);
 }
 
 /* ==========================================================================
@@ -103,7 +191,7 @@ hr {
 }
 
 /* ==========================================================================
-   4. CARDS DOS POSTS (EFEITO FOLHAS E BORDAS ARREDONDADAS)
+   4. CARDS DOS POSTS
    ========================================================================== */
 .blog-container {
     display: grid;
@@ -118,8 +206,6 @@ hr {
     border: 1px solid #e1ebe3;
     box-shadow: 0 4px 15px rgba(45, 90, 63, 0.05);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    
-    /* Detalhe de folhas no canto de cada card */
     background-image: url('card_folhas.png');
     background-repeat: no-repeat;
     background-position: top right;
@@ -153,7 +239,345 @@ hr {
 }
 
 /* ==========================================================================
-   5. RODAPÉ (TEMA DE RAÍZES)
+   5. CABEÇALHOS DE SEÇÃO PADRÃO (Sobre / Pesquisa / Contato / Adicionar)
+   ========================================================================== */
+.sobre-section,
+.pesquisa-section,
+.contato-section,
+.adicionar-section {
+    max-width: 900px;
+    margin: 0 auto 3.5rem auto;
+    text-align: center;
+    padding-top: 1rem;
+}
+
+.sobre-section h2,
+.pesquisa-section h2,
+.contato-section h2,
+.adicionar-section h2 {
+    font-size: 2.2rem;
+    color: #2c3e35;
+    margin-bottom: 0.8rem;
+    font-weight: 700;
+}
+
+.sobre-lead {
+    font-size: 1.1rem;
+    color: #4a5d52;
+    max-width: 640px;
+    margin: 0 auto 2.5rem auto;
+}
+
+.sobre-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.8rem;
+    text-align: left;
+}
+
+.sobre-card {
+    background-color: #ffffff;
+    padding: 1.8rem;
+    border-radius: 18px;
+    border: 1px solid #e1ebe3;
+    box-shadow: 0 4px 15px rgba(45, 90, 63, 0.05);
+}
+
+.sobre-card h3 {
+    color: #2d5a3f;
+    font-size: 1.1rem;
+    margin-bottom: 0.6rem;
+    font-weight: 600;
+}
+
+.sobre-card p {
+    font-size: 0.92rem;
+    color: #4a5d52;
+    text-align: justify;
+}
+
+/* ==========================================================================
+   6. PESQUISA — FILTROS E GRADE DE VÍDEOS (ESTILO YOUTUBE)
+   ========================================================================== */
+.search-filters {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-bottom: 2.2rem;
+}
+
+.filter-tag {
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    background-color: #eef4ef;
+    color: #4a5d52;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.filter-tag:hover {
+    background-color: #dcebe0;
+}
+
+.filter-tag.active {
+    background-color: #2d5a3f;
+    color: #ffffff;
+}
+
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.8rem;
+    text-align: left;
+}
+
+.video-card {
+    background-color: #ffffff;
+    border: 1px solid #e1ebe3;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(45, 90, 63, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.video-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(45, 90, 63, 0.12);
+}
+
+.video-thumb-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background-color: #1c3d29;
+    cursor: pointer;
+}
+
+.video-thumb-wrap img,
+.video-thumb-wrap iframe {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: none;
+    display: block;
+}
+
+.video-play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 56px;
+    height: 56px;
+    background-color: rgba(45, 90, 63, 0.85);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    transition: background-color 0.25s ease;
+}
+
+.video-card:hover .video-play-btn {
+    background-color: #2d5a3f;
+}
+
+.video-info {
+    padding: 1.1rem 1.3rem 1.4rem;
+}
+
+.video-info h4 {
+    color: #2d5a3f;
+    font-size: 1.02rem;
+    margin-bottom: 0.6rem;
+    font-weight: 600;
+}
+
+.result-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #2d5a3f;
+    background-color: #eef4ef;
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+}
+
+.empty-state {
+    text-align: center;
+    color: #6c7e73;
+    padding: 3rem 1rem;
+    font-size: 1rem;
+    border: 1px dashed #d8e3da;
+    border-radius: 16px;
+}
+
+/* ==========================================================================
+   7. FORMULÁRIO — PÁGINA ADICIONAR
+   ========================================================================== */
+.video-form {
+    max-width: 560px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border: 1px solid #e1ebe3;
+    border-radius: 20px;
+    padding: 2.2rem;
+    box-shadow: 0 4px 15px rgba(45, 90, 63, 0.05);
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: 1.4rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    color: #2d5a3f;
+    margin-bottom: 0.5rem;
+    font-size: 0.92rem;
+}
+
+.form-group input[type="text"],
+.form-group input[type="url"],
+.form-group select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d8e3da;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: #2c3e35;
+    background-color: #fbfdfb;
+    outline: none;
+    transition: border-color 0.25s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #2d5a3f;
+}
+
+.form-hint {
+    font-size: 0.8rem;
+    color: #8fa199;
+    margin-top: 0.4rem;
+}
+
+.form-submit-btn {
+    width: 100%;
+    padding: 0.9rem;
+    background-color: #2d5a3f;
+    color: #ffffff;
+    border: none;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+}
+
+.form-submit-btn:hover {
+    background-color: #234a32;
+}
+
+.form-feedback {
+    margin-top: 1rem;
+    text-align: center;
+    font-weight: 600;
+    color: #2d5a3f;
+    min-height: 1.4rem;
+}
+
+/* ==========================================================================
+   8. BLOCO DE CONTATO RÁPIDO (FIM DE CADA PÁGINA)
+   ========================================================================== */
+.mini-contact {
+    max-width: 900px;
+    margin: 0 auto 1rem auto;
+    padding: 1.6rem 2rem;
+    background-color: #ffffff;
+    border: 1px solid #e1ebe3;
+    border-radius: 18px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(45, 90, 63, 0.05);
+}
+
+.mini-contact-title {
+    font-size: 0.98rem;
+    color: #4a5d52;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.mini-contact-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1.6rem;
+}
+
+.mini-contact-links a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: #2d5a3f;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.mini-contact-links a:hover {
+    color: #1c3d29;
+}
+
+/* ==========================================================================
+   9. SEÇÃO CONTATO (PÁGINA PRINCIPAL)
+   ========================================================================== */
+.contato-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.8rem;
+}
+
+.contato-card {
+    background-color: #ffffff;
+    border: 1px solid #e1ebe3;
+    border-radius: 18px;
+    padding: 2rem 1.5rem;
+    text-decoration: none;
+    color: #2d5a3f;
+    box-shadow: 0 4px 15px rgba(45, 90, 63, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.contato-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(45, 90, 63, 0.12);
+}
+
+.contato-card h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.contato-card p {
+    font-size: 0.92rem;
+    color: #4a5d52;
+}
+
+/* ==========================================================================
+   10. RODAPÉ
    ========================================================================== */
 footer {
     background-color: #ffffff;
@@ -163,10 +587,21 @@ footer {
     color: #6c7e73;
     font-size: 0.9rem;
     margin-top: 5rem;
-    
-    /* Padrão de raízes no rodapé */
     background-image: url('footer_raizes.png');
     background-repeat: repeat-x;
     background-position: top center;
     background-size: contain;
+}
+
+/* ==========================================================================
+   11. RESPONSIVO
+   ========================================================================== */
+@media (max-width: 768px) {
+    header {
+        justify-content: center;
+    }
+
+    .search-bar {
+        max-width: 100%;
+    }
 }
