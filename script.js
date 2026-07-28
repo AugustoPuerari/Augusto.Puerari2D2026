@@ -20,6 +20,60 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // ==========================================================================
+// MODAL DE LEITURA COMPLETA DOS POSTS (Início)
+// ==========================================================================
+var postCards = document.querySelectorAll('.post-card');
+var postModal = document.getElementById('post-modal');
+
+if (postModal && postCards.length) {
+    var modalImage = document.getElementById('modal-image');
+    var modalTitle = document.getElementById('modal-title');
+    var modalText = document.getElementById('modal-text');
+    var modalClose = document.getElementById('modal-close');
+
+    function openModalFromCard(card) {
+        var img = card.querySelector('img');
+        var title = card.querySelector('h3');
+        var text = card.querySelector('.post-excerpt');
+
+        modalImage.src = img ? img.getAttribute('src') : '';
+        modalImage.alt = img ? img.getAttribute('alt') : '';
+        modalTitle.textContent = title ? title.textContent : '';
+        modalText.textContent = text ? text.textContent : '';
+
+        postModal.classList.add('open');
+        document.body.classList.add('modal-locked');
+    }
+
+    function closePostModal() {
+        postModal.classList.remove('open');
+        document.body.classList.remove('modal-locked');
+    }
+
+    postCards.forEach(function (card) {
+        card.addEventListener('click', function () {
+            openModalFromCard(card);
+        });
+        card.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                openModalFromCard(card);
+            }
+        });
+    });
+
+    modalClose.addEventListener('click', closePostModal);
+
+    postModal.addEventListener('click', function (e) {
+        if (e.target === postModal) closePostModal();
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closePostModal();
+    });
+}
+
+// ==========================================================================
 // BANCO DE VÍDEOS (guardado no navegador de quem acessa o site)
 // ==========================================================================
 var VIDEOS_KEY = 'ecoreparo_videos';
